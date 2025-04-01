@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesDashboard.Tests", "SalesDashboard.Tests\SalesDashboard.Tests.csproj", "{4DE8D2C9-A267-9BA2-8459-648C89FCA959}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesDashboard.Web", "SalesDashboard.Web\SalesDashboard.Web.csproj", "{9C0557BE-F40A-8B18-0483-F53B80C0DAB4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4DE8D2C9-A267-9BA2-8459-648C89FCA959}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DE8D2C9-A267-9BA2-8459-648C89FCA959}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DE8D2C9-A267-9BA2-8459-648C89FCA959}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DE8D2C9-A267-9BA2-8459-648C89FCA959}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C0557BE-F40A-8B18-0483-F53B80C0DAB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C0557BE-F40A-8B18-0483-F53B80C0DAB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C0557BE-F40A-8B18-0483-F53B80C0DAB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C0557BE-F40A-8B18-0483-F53B80C0DAB4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D4D27596-7BAF-4622-A22A-B74A74961C06}
+	EndGlobalSection
+EndGlobal
