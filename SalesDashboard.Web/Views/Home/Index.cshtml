@@ -1,0 +1,410 @@
+﻿@model SalesDashboard.Web.ViewModel.DashboardViewModel
+@{
+    ViewData["Title"] = "Sales Dashboard";
+}
+
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5 fw-bold">Sales Dashboard</h1>
+            <p class="text-muted">Comprehensive view of sales performance across segments, products, and regions.</p>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4 col-xl-2 mb-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-uppercase text-muted mb-2">Total Revenue</h6>
+                    <h2 class="mb-0 text-primary">@Model.Summary.TotalRevenue.ToString("C0")</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-xl-2 mb-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-uppercase text-muted mb-2">Total Profit</h6>
+                    <h2 class="mb-0 text-success">@Model.Summary.TotalProfit.ToString("C0")</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-xl-2 mb-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-uppercase text-muted mb-2">Units Sold</h6>
+                    <h2 class="mb-0">@Model.Summary.TotalUnitsSold.ToString("N0")</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-xl-2 mb-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-uppercase text-muted mb-2">Orders</h6>
+                    <h2 class="mb-0">@Model.Summary.OrderCount.ToString("N0")</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-xl-2 mb-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-uppercase text-muted mb-2">Avg. Order Value</h6>
+                    <h2 class="mb-0">@Model.Summary.AverageOrderValue.ToString("C0")</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 col-xl-2 mb-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body">
+                    <h6 class="text-uppercase text-muted mb-2">Profit Margin</h6>
+                    <h2 class="mb-0">@Model.Summary.ProfitMargin.ToString("P1")</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row 1 -->
+    <div class="row mb-4">
+        <!-- Revenue by Segment -->
+        <div class="col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Revenue by Segment</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="segmentChart" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Revenue by Country -->
+        <div class="col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Top Countries by Revenue</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="countryChart" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row 2 -->
+    <div class="row mb-4">
+        <!-- Monthly Revenue Trend -->
+        <div class="col-md-8 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Monthly Revenue Trend</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="monthlyChart" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Revenue by Discount Band -->
+        <div class="col-md-4 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Revenue by Discount Band</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="discountChart" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Products -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">Top Products by Revenue</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th class="text-end">Revenue</th>
+                                    <th class="text-end">% of Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var totalRevenue = Model.Summary.TotalRevenue;
+                                    foreach (var product in Model.SalesByProduct.OrderByDescending(p => p.Value).Take(5))
+                                    {
+                                        var percentage = totalRevenue > 0 ? (product.Value / totalRevenue) * 100 : 0;
+                                        <tr>
+                                            <td>@product.Key</td>
+                                            <td class="text-end">@product.Value.ToString("C0")</td>
+                                            <td class="text-end">@percentage.ToString("F1")%</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Sales Table -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Recent Sales</h5>
+                    @* <button class="btn btn-outline-primary btn-sm" id="btnExport">Export Data</button> *@
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover" id="salesTable">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Segment</th>
+                                    <th>Country</th>
+                                    <th>Product</th>
+                                    <th>Discount</th>
+                                    <th class="text-end">Units</th>
+                                    <th class="text-end">Price</th>
+                                    <th class="text-end">Revenue</th>
+                                    <th class="text-end">Profit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var sale in Model.RecentSales)
+                                {
+                                    <tr>
+                                        <td>@sale.Date.ToString("MM/dd/yyyy")</td>
+                                        <td>@sale.Segment</td>
+                                        <td>@sale.Country</td>
+                                        <td>@sale.Product</td>
+                                        <td>@(string.IsNullOrEmpty(sale.DiscountBand) ? "None" : sale.DiscountBand)</td>
+                                        <td class="text-end">@sale.UnitsSold.ToString("N0")</td>
+                                        <td class="text-end">@sale.SalePrice.ToString("C2")</td>
+                                        <td class="text-end">@sale.Revenue.ToString("C0")</td>
+                                        <td class="text-end">@sale.Profit.ToString("C0")</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <!-- Dashboard JavaScript -->
+    <script src="~/js/dashboard.js"></script>
+    
+    <script>
+        // Chart Colors
+        const colors = [
+            'rgba(54, 162, 235, 0.8)',
+            'rgba(255, 99, 132, 0.8)',
+            'rgba(255, 206, 86, 0.8)',
+            'rgba(75, 192, 192, 0.8)',
+            'rgba(153, 102, 255, 0.8)',
+            'rgba(255, 159, 64, 0.8)',
+            'rgba(199, 199, 199, 0.8)',
+            'rgba(83, 102, 255, 0.8)',
+            'rgba(40, 159, 64, 0.8)',
+            'rgba(210, 199, 199, 0.8)',
+        ];
+        
+        // Format numbers for display
+        const numberFormatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'GBP',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        });
+        
+        // Initialize charts when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            // Segment Chart
+            const segmentCtx = document.getElementById('segmentChart').getContext('2d');
+            const segmentData = @Html.Raw(Json.Serialize(Model.SalesBySegment));
+            const segmentLabels = Object.keys(segmentData);
+            const segmentValues = Object.values(segmentData);
+            
+            new Chart(segmentCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: segmentLabels,
+                    datasets: [{
+                        data: segmentValues,
+                        backgroundColor: colors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    return numberFormatter.format(value);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Country Chart
+            const countryCtx = document.getElementById('countryChart').getContext('2d');
+            const countryData = @Html.Raw(Json.Serialize(Model.SalesByCountry));
+            const countryLabels = Object.keys(countryData);
+            const countryValues = Object.values(countryData);
+            
+            new Chart(countryCtx, {
+                type: 'bar',
+                data: {
+                    labels: countryLabels,
+                    datasets: [{
+                        label: 'Revenue',
+                        data: countryValues,
+                        backgroundColor: colors[0],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    return numberFormatter.format(value);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return numberFormatter.format(value);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Monthly Chart
+            const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+            const monthlyData = @Html.Raw(Json.Serialize(Model.SalesByMonth));
+            const monthlyLabels = Object.keys(monthlyData);
+            const monthlyValues = Object.values(monthlyData);
+            
+            new Chart(monthlyCtx, {
+                type: 'line',
+                data: {
+                    labels: monthlyLabels,
+                    datasets: [{
+                        label: 'Monthly Revenue',
+                        data: monthlyValues,
+                        borderColor: colors[0],
+                        backgroundColor: 'rgba(54, 162, 235, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    return numberFormatter.format(value);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return numberFormatter.format(value);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Discount Chart
+            const discountCtx = document.getElementById('discountChart').getContext('2d');
+            const discountData = @Html.Raw(Json.Serialize(Model.SalesByDiscountBand));
+            const discountLabels = Object.keys(discountData);
+            const discountValues = Object.values(discountData);
+            
+            new Chart(discountCtx, {
+                type: 'pie',
+                data: {
+                    labels: discountLabels,
+                    datasets: [{
+                        data: discountValues,
+                        backgroundColor: colors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    return numberFormatter.format(value);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Initialize DataTable for sales
+            $('#salesTable').DataTable({
+                pageLength: 10,
+                ordering: true,
+                responsive: true
+            });
+            
+            // Export functionality
+            $('#btnExport').on('click', function() {
+                window.location.href = '/Home/ExportData';
+            });
+        });
+    </script>
+}
